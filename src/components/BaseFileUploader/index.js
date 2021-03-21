@@ -17,6 +17,7 @@ class Uploader {
     this._name = 'file_upload'
     this._then = null
     this._api = null
+    this._limit = 5 * 1024 * 1024
   }
   accept(d) {
     this._accept = d
@@ -34,6 +35,10 @@ class Uploader {
     this._api = d
     return this
   }
+  limit(d) {
+    this._limit = d
+    return this
+  }
   then(d) {
     this._then = d
     this._dialog && this._dialog.then(d)
@@ -46,7 +51,8 @@ class Uploader {
         accept: this._accept,
         name: this._name,
         data: this._data,
-        api: this._api
+        api: this._api,
+        limit: this._limit
       })
       .className('common-file-uploader')
       .then(this._then)

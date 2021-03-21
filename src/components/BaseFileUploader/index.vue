@@ -112,7 +112,7 @@
         name: '',
         data: {},
         api: null,
-        limit: 0.5 * 1024 * 1024
+        limit: 5 * 1024 * 1024
       }
     },
     computed: {
