@@ -35,6 +35,7 @@ this.$baseFileUploader()
               console.log('form: ', form)
             })
           })
+          .limit(5 * 1024 * 1024)
           .show()
           .then((res) => {
             console.log('res: ', res)
