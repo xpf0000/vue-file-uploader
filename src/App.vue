@@ -11,6 +11,7 @@
     methods: {
       show() {
         this.$baseFileUploader()
+          .accept(['image/*'])
           .then((res) => {
             console.log('res: ', res)
           })

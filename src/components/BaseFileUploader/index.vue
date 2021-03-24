@@ -201,10 +201,10 @@
         console.log('command: ', command)
         this.type = command
         let input = document.createElement('input') //创建input
-        input.name = 'file_upload'
-        input.type = 'file' //设置类型为file
-        input.setAttribute('accept', this.accept.join())
-        input.setAttribute('multiple', 'multiple')
+        let accept = this.accept.join()
+        input.type = 'file'
+        input.accept = accept
+        input.multiple = true
         if (command === 'dir') {
           input.setAttribute('webkitdirectory', 'true')
         }
@@ -238,9 +238,6 @@
        * @returns {boolean} 是否重复
        */
       isContain(file) {
-        if (!this.accept.includes(file.type)) {
-          return true
-        }
         for (let uuid in this.files) {
           let item = this.files[uuid]
           if (item.name === file.name && item.size === file.size) {
