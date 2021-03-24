@@ -15,7 +15,7 @@ Vue.use(BaseFileUploader, store)
 // 使用
 this.$baseFileUploader()
           .name('image')
-          .accept(['*.jpg', '*.png'])
+          .accept(['.jpg', '.png'])
           .data({
             a: 5
           })
