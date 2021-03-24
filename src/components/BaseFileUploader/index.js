@@ -57,6 +57,7 @@ class Uploader {
       .className('common-file-uploader')
       .then(this._then)
       .show()
+    return this
   }
 }
 
