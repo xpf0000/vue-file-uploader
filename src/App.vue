@@ -20,6 +20,7 @@
             a: 5
           })
           .api((form, progress) => {
+            console.log('form: ', form)
             return new Promise((resolve) => {
               setTimeout(() => {
                 progress &&

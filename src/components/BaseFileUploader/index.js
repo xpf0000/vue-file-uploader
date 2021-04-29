@@ -1,4 +1,3 @@
-import BaseDialog from '@xpf0000/vue-element-dialog'
 import UploadView from './index.vue'
 import uplaodStore from './store'
 
@@ -94,7 +93,6 @@ function install(Vue, store) {
   if (!store.hasModule('uploader')) {
     store.registerModule('uploader', uplaodStore)
   }
-  Vue.use(BaseDialog)
   import('../../lib/directory-upload').then(() => {})
   Vue.prototype.$baseFileUploader = function () {
     return new Uploader(this)
