@@ -149,7 +149,7 @@
               let file = filesAndDirs[i]
               if (!self.isContain(file)) {
                 let id = uuid()
-                const item = this.createItem(file)
+                const item = self.createItem(file)
                 ;(item.path =
                   path === '/' ? file.name : `${path}/${file.name}`),
                   (item.id = id)

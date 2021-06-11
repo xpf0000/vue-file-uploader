@@ -6,6 +6,9 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 const store = new Vuex.Store({})
 
+import BaseDialog from '@xpf0000/vue-element-dialog'
+Vue.use(BaseDialog)
+
 import BaseFileUploader from '@/components/BaseFileUploader'
 Vue.use(BaseFileUploader, store)
 Vue.use(ElementUI, {
