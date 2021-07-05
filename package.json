@@ -1,6 +1,6 @@
 {
   "name": "@xpf0000/vue-file-uploader",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "author": "xu pengfei 250881478@qq.com",
   "main": "src/components/BaseFileUploader/index.js",
   "unpkg": "src/components/BaseFileUploader/index.js",

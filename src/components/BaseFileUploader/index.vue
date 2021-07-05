@@ -249,7 +249,7 @@
       onSubmit() {
         this.$store.dispatch('uploader/runAll').then((res) => {
           console.log('res: ', res)
-          this.callBack && this.callBack(true, false)
+          this.callBack && this.callBack(res, false)
         })
       }
     }
