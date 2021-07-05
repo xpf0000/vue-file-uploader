@@ -75,7 +75,7 @@ const actions = {
         })
         .then((res) => {
           commit('UPLOAD_COMPLETE', { uuid: uuid })
-          resolve(0)
+          resolve(res)
         })
         .catch((err) => {
           commit('UPLOAD_FAIL', { uuid: uuid })
@@ -93,8 +93,8 @@ const actions = {
       if (arr.length === 0) {
         reject(new Error('无任务'))
       } else {
-        Promise.all(arr).then((_) => {
-          resolve(0)
+        Promise.all(arr).then((res) => {
+          resolve(res)
         })
       }
     })
