@@ -64,23 +64,89 @@ const actions = {
         return
       }
       item.status = 'running'
-      item
-        .api(item.form, (evt) => {
-          if (evt.lengthComputable) {
-            const percentComplete = Math.round((evt.loaded * 100) / evt.total)
-            commit('UPDATE_PROGRESS', { uuid: uuid, progress: percentComplete })
-          } else {
-            console.warn('upload progress unable to compute')
+      if (item.file.size > 1024 * 1024 * 10) {
+        // 大于10m分片上传
+        /**
+         * @typedef {object} IUploadItem
+         * @property {() => Promise<void>} api
+         * @property {File} file
+         * @property {object} form
+         * @property {number} id
+         * @property {string} name
+         * @property {string} path
+         * @property {number} progress
+         * @property {number} size
+         * @property {'running' | 'waiting' | 'completed' | 'fail'} status
+         * */
+          // 分片大小
+        const cutSize = 1024 * 1024 * 2
+        // 总分片数量
+        const totalCutNum = Math.ceil(item.file.size / cutSize)
+        item.form.total_blob_num = totalCutNum
+        item.form.file_flag = ''
+        item.form.file_name = item.file.name
+        /**
+         * @param {IUploadItem} item
+         * @param {number} startSize 当前开始分割位置
+         * @param {number} index 当前分片编号
+         * */
+        const pieces = (item, startSize, index) => {
+          let endSize = startSize + cutSize
+          if (endSize > item.file.size) {
+            endSize = item.file.size
           }
-        })
-        .then((res) => {
-          commit('UPLOAD_COMPLETE', { uuid: uuid })
-          resolve(res)
-        })
-        .catch((err) => {
-          commit('UPLOAD_FAIL', { uuid: uuid })
-          resolve(2)
-        })
+          const progress = Math.floor(Number((index / totalCutNum).toFixed(2)) * 100)
+          let chunk = item.file.slice(startSize, endSize, item.file.type)
+          item.form.file_upload = chunk
+          item.form.blob_num = index
+          item
+            .api(item.form, (evt) => {
+              /*if (evt.lengthComputable) {
+                const percentComplete = Math.round((evt.loaded * 100) / evt.total)
+                commit('UPDATE_PROGRESS', { uuid: uuid, progress: percentComplete })
+              } else {
+                console.warn('upload progress unable to compute')
+              }*/
+            })
+            .then((res) => {
+              if (res.data.is_finish) {
+                // 传完了
+                commit('UPLOAD_COMPLETE', { uuid: uuid })
+                resolve(res)
+              } else {
+                item.form.file_flag = res.data.file_flag
+                // 没传完，更新进度
+                Vue.set(item, 'progress', progress)
+                pieces(item, endSize, index + 1)
+              }
+            })
+            .catch((err) => {
+              commit('UPLOAD_FAIL', { uuid: uuid })
+              resolve(2)
+            })
+        }
+
+        pieces(item, 0, 1)
+      } else {
+        // 无需分片
+        item
+          .api(item.form, (evt) => {
+            if (evt.lengthComputable) {
+              const percentComplete = Math.round((evt.loaded * 100) / evt.total)
+              commit('UPDATE_PROGRESS', { uuid: uuid, progress: percentComplete })
+            } else {
+              console.warn('upload progress unable to compute')
+            }
+          })
+          .then((res) => {
+            commit('UPLOAD_COMPLETE', { uuid: uuid })
+            resolve(res)
+          })
+          .catch((err) => {
+            commit('UPLOAD_FAIL', { uuid: uuid })
+            resolve(2)
+          })
+      }
     })
   },
   runAll({ commit, dispatch, state }) {
